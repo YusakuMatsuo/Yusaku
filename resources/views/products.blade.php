@@ -36,14 +36,14 @@
                 商品名:{{$val -> product_name}}
                 価格:{{$val -> price}}
                 在庫数:{{$val -> stock}}
-                <a href="{{route('itemDelete', $val -> products_id)}}"><input type="button" value="削除"  id = "b"></a>
+                <a href="{{route('itemDelete', $val -> products_id)}}"><input type="button" value="削除"  id = "btn"></a>
                 <a href="{{route('detail', $val -> products_id)}}"><button>詳細表示</button></a>
             </div>
         @endforeach
 
     </div>
 
-    <input type="button" value = "ボタン" id = "btn">
+    <input type="button" value = "ボタン" id = "b">
     <script>
         var btn = document.getElementById('btn');
         btn.addEventListener('click', function(){
