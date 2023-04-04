@@ -46,18 +46,14 @@ class productController extends Controller
     public function getSearch(Request $req) {
         $model = new Product();
         // dd($req->search);
+        // dd($req);
         $result = $model -> getSearch($req);
         $resultCompany = $model ->getCompany();
-        // dd($result);
-        return view('products', ['product' => $result, 'company' => $resultCompany]);
+        dd($result);
+        // return view('products', ['product' => $result, 'company' => $resultCompany]);
+        return response()->json($result);
+        // return $result;
     }
-
-
-
-
-
-
-
 
     //商品の新規登録
 
@@ -73,29 +69,59 @@ class productController extends Controller
         return view('product_register', ['company' => $company]);
     } catch(\Exception $e) {
         DB::rollback();
-        return back();
+        $model = new Product();
+        $company = $model -> getCompany();
+        return view('product_register', ['company' => $company]);
+
+        // return back();
     }
         return redirect(route('regist'));
     }
 
 
-
     //情報削除処理
+    
     public function itemDelete($id) {
-        $model = new Product();
-        // $product = $model -> itemDel();
-        $model -> itemDelete($id);
-        $product = $model -> getAll();
-        $company = $model -> getCompany();
-        return view('products', ['product' => $product, 'company' => $company]);
+        DB::beginTransaction();
+        try {            
+            $model = new Product();
+            // $product = $model -> itemDel();
+            $model -> itemDelete($id);
+            $product = $model -> getAll();
+            $company = $model -> getCompany();
+            DB::commit();
+            return view('products', ['product' => $product, 'company' => $company]);
+        } catch(\Exception $e) {
+                DB::rollback();
+                $model = new Product();
+                $product = $model -> getAll();
+                $company = $model -> getCompany();
+                return view('products', ['product' => $product, 'company' => $company]);
+            }
+            return redirect(route('product'));
     }
 
     //商品情報編集(更新)処理
     public function infoUpdate($id, Request $req) {
         $model = new Product();
-        $itemUpdate = $model -> infoUpdate($req);
+        DB::beginTransaction();
+        try {
+            $itemUpdate = $model -> infoUpdate($req);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
         $product = $model -> getInfo($req -> id);
         $resultCompany = $model ->getCompany();
         return view('product_editing', ['product' => $product, 'company' => $resultCompany]);
-    } 
+    }
+
+       //高田さん商品検索機能
+       public function productSearch(Request $req){
+        // dd($req->all());
+        $product = $this->product_model->getSearchQuery($req);
+        // dd($product);
+        return response()->json($product);
+    }
+
 }

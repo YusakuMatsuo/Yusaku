@@ -39,10 +39,17 @@ class Product extends Model
             'stock',
             'comment',
             'img_path',
-            'company_name'
+            'company_name',
         ) 
-        -> leftjoin('companies', 'companies.id','=', 'products.company_id') 
-        -> where('product_name',"LIKE", '%'.$req -> search.'%') -> get();
+        -> leftjoin('companies', 'companies.id','=', 'products.company_id');
+        if($req -> search){
+            //
+            $search -> where('product_name',"LIKE", '%'.$req -> search.'%');
+        }
+        if($req -> companySearch) {
+            $search -> where('company_id',$req -> companySearch);
+        }
+        $search = $search -> get();
         return $search;//$result;
     }
 
@@ -106,5 +113,61 @@ class Product extends Model
             'img_path' => $req -> img_path,
         ]);
         return;
+    }
+
+    
+        //高田さん
+    //検索機能
+    public function getSearchQuery(Request $req) {
+        // dd($req->productName);
+        $product = \DB::table($this->table)->select(
+            'products.id as products_id',
+            'company_id',
+            'product_name',
+            'price',
+            'stock',
+            'comment',
+            'img_path',
+            'company_name'
+        );
+
+        // if($req->productName){
+        //     // dd($req->productName);
+        //     $product->where('product_name',$req->productName);
+        // }else if($req->stockMin && $req->stockMax){
+        //     // dd($req->stockMin);
+        //     $product->where('stock','>=',$req->stockMin)
+        //     ->where('stock','=<',$req->stockMax);
+        // }else if($req->priceMax && $req->priceMin){
+        //     // dd($req->priceMax);
+        //     $product->where('price','=<',$req->priceMin)
+        //     ->where('price','>=',$req->priceMax);
+        // }else {
+        //     // dd($req->company_select);
+        //     $product->where('companies.id',$req->company_select);
+        // }
+
+        if($req->productName){
+            // dd($req->productName);
+            $product = $product->where('product_name',$req->productName);
+        }
+        // if($req->stockMin && $req->stockMax){
+        //     // dd($req->stockMin);
+        //     $product->where('stock','<=',$req->stockMax)
+        //     ->where('stock','>=',$req->stockMin);
+        // }
+        // if($req->priceMax && $req->priceMin){
+        //     // dd($req->priceMax,$req->priceMin);
+        //     $product->where('price','<=',$req->priceMax)
+        //     ->where('price','>=',$req->priceMin);
+        // }
+        if($req->company_select && $req->company_select != 0){
+            // dd($req->company_select);
+            $product->where('companies.id',$req->company_select);
+        }
+        // dd($product->toSql());
+        $product = $product->leftjoin('companies','companies.id','=','products.company_id')->get();
+        // dd($product[0]->stock);
+        return $product;
     }
 }
