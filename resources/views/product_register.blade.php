@@ -19,8 +19,19 @@
     コメント<textarea name = "comment"></textarea><br>
     商品画像<input type = "file" name = "image"><br>
     <input type="submit" value = "登録"></input><br>
+    
    </form>
-    <!-- 商品情報登録画面→商品一覧画面 -->
+
+   @if ($errors->any())
+    <div class="alert alert-danger mt-3">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+   <!-- 商品情報登録画面→商品一覧画面 -->
     <a href="{{route('product')}}"><button>戻る</button></a>
 </body>
 </html>
