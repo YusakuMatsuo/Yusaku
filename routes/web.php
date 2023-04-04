@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\productController;
+use App\Http\Requests\productRequest;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +43,8 @@ Route::get('/productDelete/{id}','productController@itemDelete')->name('itemDele
 //商品情報編集処理
 Route::post('/products/{id}','productController@infoUpdate')->name('infoUpdate');
 
+//高田さん
+Route::post('/takada', 'productController@productSearch')->name('productSearch');
 
 
 
