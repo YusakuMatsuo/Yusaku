@@ -44,12 +44,16 @@ class productController extends Controller
 
     //商品の検索結果を表示
     public function getSearch(Request $req) {
+        // dd($req);
         $model = new Product();
         // dd($req->search);
         // dd($req);
         $result = $model -> getSearch($req);
         $resultCompany = $model ->getCompany();
-        dd($result);
+
+        // dd($result);
+        // dd($resultCompany);
+        //dd($result);
         // return view('products', ['product' => $result, 'company' => $resultCompany]);
         return response()->json($result);
         // return $result;
@@ -116,12 +120,27 @@ class productController extends Controller
         return view('product_editing', ['product' => $product, 'company' => $resultCompany]);
     }
 
-       //高田さん商品検索機能
-       public function productSearch(Request $req){
-        // dd($req->all());
-        $product = $this->product_model->getSearchQuery($req);
-        // dd($product);
-        return response()->json($product);
-    }
+    //降順処理
+    public function dataDesc(Request $req){
+        // dd($req->id);
+        $model = new Product();
+        // dd($req->id);
+        // $result = $model -> dataDesc();
+        // dd($result);
+        //降順
+        
+        //昇順
+        if ((substr($req->id,-3) === 'Asc')) {
+            // dd(substr($req->id,-3));
+            //ソートするカラム名を習得
+            $sortname = (substr($req->id,0,-3));
+            // dd($sortname);
+        } else if ((substr($req->id,-4) === 'Desc')) {
+            $sortname = (substr($req->id,0,-4));
+        }
+        $result = $model->dataDesc();
 
+        return response()->json($result);
+    }
+    
 }

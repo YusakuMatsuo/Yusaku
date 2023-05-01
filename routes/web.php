@@ -32,6 +32,7 @@ Route::get('/product_register','productController@productRegistView')->name('reg
 //商品情報編集画面
 Route::get('/product_editing/{id}','productController@productEditView')->name('edit');
 
+//商品情報検索結果
 Route::post('/search','productController@getSearch')->name('search');
 
 //商品新規登録
@@ -43,8 +44,11 @@ Route::get('/productDelete/{id}','productController@itemDelete')->name('itemDele
 //商品情報編集処理
 Route::post('/products/{id}','productController@infoUpdate')->name('infoUpdate');
 
-//高田さん
-Route::post('/takada', 'productController@productSearch')->name('productSearch');
+// //降順情報処理
+Route::post('/dataDesc','productController@dataDesc')->name('dataDesc');
+
+// //高田さん
+// Route::post('/takada', 'productController@productSearch')->name('productSearch');
 
 
 
